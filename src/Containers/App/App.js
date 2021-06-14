@@ -1,44 +1,51 @@
-import React, { useState } from 'react';
-import classes from './App.module.css';
-import Task from '../../Components/Task/Task';
+import React, { useState, useEffect, useRef } from "react";
+import classes from "./App.module.css";
+import Task from "../../Components/Task/Task";
+import axios from "../../axios-firebase";
 
 //essai
 
 function App() {
-
   // States
   const [tasks, setTasks] = useState([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
+
+  // Utiliser
+
+useEffect(() => {
+  inputRef.current.focus();
+}, []);
 
   // Fonctions
-  const removeClickedHandler = index => {
+  const removeClickedHandler = (index) => {
     const newTasks = [...tasks];
     newTasks.splice(index, 1);
     setTasks(newTasks);
-  }
+  };
 
-  const doneClickedHandler = index => {
+  const doneClickedHandler = (index) => {
     const newTasks = [...tasks];
     newTasks[index].done = !tasks[index].done;
     setTasks(newTasks);
-  }
+  };
 
-  const submittedTaskHandler = event => {
+  const submittedTaskHandler = (event) => {
     event.preventDefault();
 
     const newTask = {
       content: input,
-      done: false
-    }
+      done: false,
+    };
     setTasks([...tasks, newTask]);
-    setInput('');
-  }
+    setInput("");
+  };
 
-  const changedFormHandler = event => {
+  const changedFormHandler = (event) => {
     setInput(event.target.value);
-  }
+  };
 
   // Variables
+
   let tasksDisplayed = tasks.map((task, index) => (
     <Task
       done={task.done}
@@ -48,6 +55,7 @@ function App() {
       doneClicked={() => doneClickedHandler(index)}
     />
   ));
+  const inputRef = useRef(null);
   // let donedTasks = tasks.filter(task => task.done)
   //   .map((filteredTask, index) => (
   //     <Task
@@ -69,12 +77,12 @@ function App() {
         <form onSubmit={(e) => submittedTaskHandler(e)}>
           <input
             type="text"
+            ref={inputRef}
             value={input}
             onChange={(e) => changedFormHandler(e)}
-            placeholder="Que souhaitez-vous ajouter ?" />
-          <button type="submit">
-            Ajouter
-          </button>
+            placeholder="Que souhaitez-vous ajouter ?"
+          />
+          <button type="submit">Ajouter</button>
         </form>
       </div>
 
